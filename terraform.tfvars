@@ -1,0 +1,11 @@
+ip                     = "ip"
+ssh_port               = "22"
+ssh_user               = "user"
+connection_type        = "ssh"
+ssh_key                = "~\\.ssh\\key"
+grafana_admin_user     = "test"
+grafana_admin_password = "test"
+grafana_port           = 3000
+restart_policy         = "always"
+managment_user         = "root"
+log_tags               = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"

@@ -1,0 +1,64 @@
+
+name: 'Terraform'
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - '**/README.md'
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    environment: production
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_KEY }}
+        name: snow
+        known_hosts: ${{ secrets.SSH_HOST }}
+        if_key_exists: replace
+
+    - name: Write secret to file
+      run: |
+        cat << EOF > ./main.tfvars
+        ${{ secrets.TERRAFORM_VARS }}
+        EOF
+
+    - name: Write backed config to file
+      run: |
+        cat << EOF > ./backend.tfvars
+        ${{ secrets.TERRAFORM_BACKEND }}
+        EOF
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3.1.1
+      with:
+        terraform_version: "1.8.2"
+
+    - name: Terraform Init
+      run: terraform init --upgrade --backend-config=backend.tfvars
+
+    - name: Terraform Validate
+      run: terraform validate
+
+    - name: Terraform Plan
+      run: terraform plan --var-file="main.tfvars" --parallelism=1
+
+#    - name: Terraform Apply
+#      if: github.ref == 'refs/heads/main' && github.event_name == 'push' && github.event.review.state == 'approved'
+#      run: terraform apply --var-file="main.tfvars" --auto-approve --parallelism=1
