@@ -43,13 +43,14 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "percent"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 12,
-        "w": 5,
+        "h": 8,
+        "w": 4,
         "x": 0,
         "y": 0
       },
@@ -78,7 +79,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum(rate({job=\"containerlogs\"} |~ `(?i)Fail|Error|Bug|Drop|Close` != `info` [10m])) / sum(rate({job=\"containerlogs\"} [10m]))",
+          "expr": "sum(rate({job=\"containerlogs\"} |~ `(?i)Fail|Error|Bug|Drop|Close` != `info` [10m])) / sum(rate({job=\"containerlogs\"} [10m])) * 100",
           "hide": false,
           "legendFormat": "Error rate",
           "queryType": "range",
@@ -87,6 +88,84 @@
       ],
       "title": "Container error rate [10m]",
       "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "custom": {
+            "fillOpacity": 70,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineWidth": 0,
+            "spanNulls": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 10,
+        "x": 4,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "alignValue": "left",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "never",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.4.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum by(container_name) (rate({job=\"containerlogs\"} [10m]))",
+          "hide": false,
+          "legendFormat": "{{container_name}}",
+          "queryType": "range",
+          "refId": "B"
+        }
+      ],
+      "title": "Container log rate [10m]",
+      "type": "state-timeline"
     },
     {
       "datasource": {
@@ -111,9 +190,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 12,
-        "w": 19,
-        "x": 5,
+        "h": 8,
+        "w": 10,
+        "x": 14,
         "y": 0
       },
       "id": 5,
@@ -282,7 +361,7 @@
         "h": 10,
         "w": 11,
         "x": 0,
-        "y": 12
+        "y": 8
       },
       "id": 2,
       "options": {
@@ -362,24 +441,45 @@
     },
     {
       "datasource": {
-        "type": "loki",
-        "uid": "P8E80F9AEF21F6940"
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
       },
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "continuous-GrYlRd"
+            "mode": "palette-classic"
           },
           "custom": {
-            "fillOpacity": 70,
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
             "insertNulls": false,
-            "lineWidth": 0,
-            "spanNulls": true
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
           },
           "mappings": [],
           "thresholds": {
@@ -394,7 +494,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "decmbytes"
         },
         "overrides": []
       },
@@ -402,41 +503,41 @@
         "h": 10,
         "w": 13,
         "x": 11,
-        "y": 12
+        "y": 8
       },
-      "id": 1,
+      "id": 6,
       "options": {
-        "alignValue": "left",
         "legend": {
+          "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
         },
-        "mergeValues": true,
-        "rowHeight": 0.9,
-        "showValue": "never",
         "tooltip": {
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "10.4.2",
       "targets": [
         {
           "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
           },
+          "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "sum by(container_name) (rate({job=\"containerlogs\"} [10m]))",
-          "hide": false,
+          "expr": "sum by(container_name) (containerlog_bytes_total) / (1024*1024)",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
           "legendFormat": "{{container_name}}",
-          "queryType": "range",
-          "refId": "B"
+          "range": true,
+          "refId": "A",
+          "useBackend": false
         }
       ],
-      "title": "Container log rate [10m]",
-      "type": "state-timeline"
+      "title": "Container logs size",
+      "type": "timeseries"
     },
     {
       "datasource": {
@@ -447,7 +548,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 22
+        "y": 18
       },
       "id": 3,
       "options": {

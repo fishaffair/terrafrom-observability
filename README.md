@@ -1,11 +1,11 @@
 ## Terraform workflow for deploying Grafana Observavilisty Stack in Docker
-# (Grafana-Loki-Promtail-Prometheus)
+### (Grafana-Loki-Promtail-Prometheus)
 With fancy docker dashboards.
 
 Dashboards screenshots:
 
-![Alt text](/img/dashboard1.png "dashboard1")
-![Alt text](/img/dashboard2.png "dashboard2")
+![Alt text](/img/dashboard1.png "Docker container logs dashboard")
+![Alt text](/img/dashboard2.png "dLoki & Promtail stats dashboard")
 
 ## Usage
 1. Clone repo

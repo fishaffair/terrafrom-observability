@@ -8,4 +8,3 @@ grafana_admin_password = "test"
 grafana_port           = 3000
 restart_policy         = "always"
 managment_user         = "root"
-log_tags               = "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
