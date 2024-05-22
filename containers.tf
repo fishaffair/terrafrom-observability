@@ -117,6 +117,11 @@ resource "docker_container" "loki" {
     ignore_changes       = [network_mode, log_opts]
     replace_triggered_by = [local_file.hash]
   }
+    ports {
+    ip       = "127.0.0.1"
+    external = 3100
+    internal = 3100
+  }
 }
 
 # Run Promtail
@@ -134,8 +139,8 @@ resource "docker_container" "promtail" {
     host_path      = "/var/log/"
   }
   volumes {
-    container_path = "/var/lib/docker/containers/"
-    host_path      = "/var/lib/docker/containers/"
+    container_path = "/var/run/docker.sock"
+    host_path      = "/var/run/docker.sock"
   }
   volumes {
     container_path = "/etc/promtail/config.yml"

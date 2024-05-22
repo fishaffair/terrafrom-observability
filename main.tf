@@ -54,10 +54,6 @@ resource "null_resource" "copy_configs" {
     source      = "configs"
     destination = "/etc"
   }
-  provisioner "file" {
-    source      = "./configs/daemon.json"
-    destination = "/etc/docker/daemon.json"
-  }
   connection {
     host        = var.ip
     type        = var.connection_type

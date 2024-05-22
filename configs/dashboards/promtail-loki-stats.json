@@ -403,7 +403,7 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "cps"
         },
         "overrides": []
       },
@@ -426,7 +426,7 @@
           "fields": "",
           "values": false
         },
-        "showPercentChange": false,
+        "showPercentChange": true,
         "textMode": "auto",
         "wideLayout": true
       },
@@ -438,15 +438,15 @@
             "uid": "PBFA97CFB590B2093"
           },
           "editorMode": "code",
-          "expr": "sum(loki_internal_log_messages_total)",
+          "expr": "sum(rate(loki_distributor_lines_received_total[$__range])) by(tenant)",
           "format": "time_series",
           "instant": false,
           "interval": "",
-          "legendFormat": "__auto",
+          "legendFormat": "Distributor Lines",
           "refId": "A"
         }
       ],
-      "title": "Internal Log Messages",
+      "title": "Loki distributor lines",
       "type": "stat"
     },
     {

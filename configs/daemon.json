@@ -1,6 +1,0 @@
-{
-    "log-driver": "json-file",
-    "log-opts": {
-       "tag": "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
-    }
- }
