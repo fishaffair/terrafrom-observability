@@ -30,6 +30,7 @@
           "color": {
             "mode": "thresholds"
           },
+          "fieldMinMax": false,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -78,8 +79,8 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "editorMode": "code",
-          "expr": "sum(rate({job=\"containerlogs\"} |~ `(?i)Fail|Error|Bug|Drop|Close` != `info` [10m])) / sum(rate({job=\"containerlogs\"} [10m])) * 100",
+          "editorMode": "builder",
+          "expr": "(sum(rate({job=\"containerlogs\"} !~ `level=info` |~ `(?i)Fail|Error|Bug|Drop|Close` [10m])) * 100) / sum(rate({job=\"containerlogs\"} [10m]))",
           "hide": false,
           "legendFormat": "Error rate",
           "queryType": "range",
@@ -123,7 +124,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "cps"
         },
         "overrides": []
       },
@@ -199,6 +201,9 @@
       "options": {
         "calculate": false,
         "cellGap": 1,
+        "cellValues": {
+          "unit": "string"
+        },
         "color": {
           "exponent": 0.5,
           "fill": "dark-orange",
@@ -227,7 +232,8 @@
         },
         "yAxis": {
           "axisPlacement": "left",
-          "reverse": true
+          "reverse": true,
+          "unit": "dateTimeAsIso"
         }
       },
       "pluginVersion": "10.4.2",
@@ -237,14 +243,14 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "editorMode": "builder",
-          "expr": "sum by(container_name) (count_over_time({job=\"containerlogs\"} |~ `(?i)Error|Fail` !~ `(?i)info` [$__auto]))",
+          "editorMode": "code",
+          "expr": "sum by(container_name) (count_over_time({job=\"containerlogs\"} !~ `(?i)level=info` |~ `(?i)Error|Fail` [10m]))",
           "legendFormat": "{{container_name}}",
           "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Log errors per container [auto]",
+      "title": "Log errors per container [10m]",
       "type": "heatmap"
     },
     {
@@ -292,7 +298,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "string"
         },
         "overrides": [
           {
@@ -359,7 +366,7 @@
       },
       "gridPos": {
         "h": 10,
-        "w": 11,
+        "w": 12,
         "x": 0,
         "y": 8
       },
@@ -392,12 +399,24 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "editorMode": "builder",
+          "editorMode": "code",
           "expr": "sum(count_over_time({job=\"containerlogs\"} |~ `(?i)Success` [$__auto]))",
           "hide": false,
           "legendFormat": "Success",
           "queryType": "range",
-          "refId": "A"
+          "refId": "Succsess"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "editorMode": "code",
+          "expr": "sum(count_over_time({job=\"containerlogs\"} |~ `(?i)Fail|(?i)Error` !~ `(?i)level=info` [$__auto]))",
+          "hide": false,
+          "legendFormat": "Error",
+          "queryType": "range",
+          "refId": "Error"
         },
         {
           "datasource": {
@@ -405,23 +424,11 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "builder",
-          "expr": "sum(count_over_time({job=\"containerlogs\"} |~ `(?i)Fail|(?i)Error` !~ `(?i)info` [$__auto]))",
-          "hide": false,
-          "legendFormat": "Error",
-          "queryType": "range",
-          "refId": "B"
-        },
-        {
-          "datasource": {
-            "type": "loki",
-            "uid": "P8E80F9AEF21F6940"
-          },
-          "editorMode": "code",
           "expr": "sum(count_over_time({job=\"containerlogs\"} |~ `(?i)Warning` [$__auto]))",
           "hide": false,
           "legendFormat": "Warning",
           "queryType": "range",
-          "refId": "C"
+          "refId": "Warning"
         },
         {
           "datasource": {
@@ -429,11 +436,11 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "code",
-          "expr": "sum(count_over_time({job=\"containerlogs\"} |~ `(?i)Info` [$__auto]))",
+          "expr": "sum(count_over_time({job=\"containerlogs\"} |~ `(?i)level=info` [$__auto]))",
           "hide": false,
           "legendFormat": "Info",
           "queryType": "range",
-          "refId": "D"
+          "refId": "Info"
         }
       ],
       "title": "Log count by status [auto]",
@@ -501,8 +508,8 @@
       },
       "gridPos": {
         "h": 10,
-        "w": 13,
-        "x": 11,
+        "w": 12,
+        "x": 12,
         "y": 8
       },
       "id": 6,
@@ -569,7 +576,7 @@
             "uid": "P8E80F9AEF21F6940"
           },
           "editorMode": "builder",
-          "expr": "{job=\"containerlogs\"} |~ `(?i)Fail|Error` != `level=info`",
+          "expr": "{job=\"containerlogs\"} != `level=info` |~ `(?i)Fail|Error`",
           "hide": false,
           "queryType": "range",
           "refId": "A"
